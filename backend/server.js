@@ -14,7 +14,7 @@ const walletRoutes = require("./routes/walletRoutes");
 const billingRoutes = require("./routes/billingRoutes");
 const reportRoutes = require("./routes/reportRoutes");
 const adminRoutes = require("./routes/adminRoutes");
-const invoiceRoutes = require("./routes/invoiceRoutes"); // NEW
+const invoiceRoutes = require("./routes/invoiceRoutes");
 
 dotenv.config();
 
@@ -23,8 +23,20 @@ connectDB();
 
 const app = express();
 
-// Middlewares
-app.use(cors());
+// ======================
+// CORS FIX
+// ======================
+app.use(
+  cors({
+    origin: [
+      "https://logiplatform-lrlg.vercel.app",
+      "https://logiplatform.vercel.app",
+    ],
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  })
+);
+
 app.use(express.json());
 
 // Health Check Route
@@ -37,24 +49,15 @@ app.get("/", (req, res) => {
 
 // API Routes
 app.use("/api/auth", authRoutes);
-
 app.use("/api/merchant", merchantRoutes);
-
 app.use("/api/orders", orderRoutes);
-
 app.use("/api/shipments", shipmentRoutes);
-
 app.use("/api/tracking", trackingRoutes);
-
 app.use("/api/wallet", walletRoutes);
-
 app.use("/api/billing", billingRoutes);
-
 app.use("/api/reports", reportRoutes);
-
 app.use("/api/admin", adminRoutes);
-
-app.use("/api/invoices", invoiceRoutes); // NEW
+app.use("/api/invoices", invoiceRoutes);
 
 // 404 Route
 app.use((req, res) => {
